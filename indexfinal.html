@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sweet Tooth Cakery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green-dark: #1e3a2f;
+      --green-mid: #2c5440;
+      --green-light: #3d6b52;
+      --pink: #e8a0a8;
+      --pink-light: #f2c4c9;
+      --cream: #f5ede0;
+      --cream-dark: #ede0cc;
+      --text-dark: #1a1a1a;
+      --text-mid: #3a3a3a;
+      --white: #fdfaf6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: var(--green-dark); border-bottom: 2px solid var(--pink);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+    }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; color: var(--cream); letter-spacing: 0.05em; }
+    .nav-logo span { color: var(--pink); font-style: italic; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.1em; color: var(--cream-dark); text-transform: uppercase; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--pink-light); }
+
+    #home {
+      min-height: 100vh; background: var(--green-dark);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding-top: 64px;
+    }
+    .hero-bg-circle { position: absolute; border-radius: 50%; background: var(--green-mid); opacity: 0.5; }
+    .hero-bg-circle.c1 { width: 600px; height: 600px; top: -200px; right: -200px; }
+    .hero-bg-circle.c2 { width: 400px; height: 400px; bottom: -150px; left: -100px; background: var(--green-light); opacity: 0.3; }
+    .hero-content { text-align: center; z-index: 1; animation: fadeUp 1.2s ease both; }
+    .hero-tag { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--pink); margin-bottom: 20px; display: block; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 6.5rem); color: var(--cream); line-height: 1.05; margin-bottom: 24px; }
+    .hero-title em { color: var(--pink-light); font-style: italic; }
+    .hero-sub { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 300; color: var(--cream-dark); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; }
+    .btn-primary { background: var(--pink); color: var(--green-dark); padding: 14px 36px; border: none; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.3s, transform 0.2s; display: inline-block; }
+    .btn-primary:hover { background: var(--pink-light); transform: translateY(-2px); }
+    .btn-outline { border: 1.5px solid var(--cream); color: var(--cream); padding: 14px 36px; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: background 0.3s, transform 0.2s; display: inline-block; }
+    .btn-outline:hover { background: rgba(245,237,224,0.1); transform: translateY(-2px); }
+    .hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--pink); font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; animation: bounce 2s infinite; }
+    .hero-scroll::after { content: ''; width: 1px; height: 40px; background: var(--pink); }
+
+    section { padding: 100px 48px; }
+    .section-label { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 14px; display: block; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15; color: var(--green-dark); margin-bottom: 20px; }
+    .section-title em { color: var(--pink); font-style: italic; }
+    .divider { width: 60px; height: 2px; background: var(--pink); margin: 20px 0 40px; }
+
+    #menu { background: var(--white); }
+    .menu-intro { max-width: 900px; margin: 0 auto; text-align: center; margin-bottom: 70px; }
+    .menu-intro .divider { margin: 20px auto 0; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; max-width: 1100px; margin: 0 auto; }
+    .menu-card { background: var(--cream); border: 1px solid var(--cream-dark); padding: 36px 32px; position: relative; transition: transform 0.3s, box-shadow 0.3s; }
+    .menu-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(30,58,47,0.12); }
+    .menu-card-tag { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; display: block; }
+    .menu-card h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green-dark); margin-bottom: 12px; }
+    .menu-card p { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 300; color: var(--text-mid); line-height: 1.7; margin-bottom: 20px; }
+    .menu-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--green-mid); }
+    .menu-card-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pink); }
+
+    #gallery { background: var(--green-dark); }
+    .gallery-intro { margin-bottom: 60px; }
+    .gallery-intro .section-label { color: var(--pink-light); }
+    .gallery-intro .section-title { color: var(--cream); }
+    .gallery-intro .divider { background: var(--pink); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1100px; margin: 0 auto; }
+    .gallery-item { overflow: hidden; position: relative; background: var(--green-mid); cursor: pointer; }
+    .gallery-item:first-child { grid-column: span 2; }
+    .gallery-item-inner { width: 100%; padding-top: 75%; position: relative; background: linear-gradient(135deg, var(--green-mid), var(--green-light)); overflow: hidden; transition: transform 0.5s ease; }
+    .gallery-item:first-child .gallery-item-inner { padding-top: 50%; }
+    .gallery-item:hover .gallery-item-inner { transform: scale(1.04); }
+    .gallery-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--cream); opacity: 0.5; font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; letter-spacing: 0.1em; gap: 8px; }
+    .gallery-placeholder-icon { font-size: 2rem; }
+    .gallery-overlay { position: absolute; inset: 0; background: rgba(30,58,47,0.7); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cream); border-bottom: 1px solid var(--pink); padding-bottom: 4px; }
+
+    #about { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .about-visual { position: relative; }
+    .about-image-box { width: 100%; padding-top: 110%; background: linear-gradient(160deg, var(--green-mid), var(--green-dark)); position: relative; overflow: hidden; }
+    .about-image-box-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--cream); opacity: 0.35; font-family: 'Playfair Display', serif; font-size: 5rem; }
+    .about-accent-box { position: absolute; bottom: -24px; right: -24px; width: 60%; height: 60%; border: 2px solid var(--pink); z-index: -1; }
+    .about-text p { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 300; color: var(--text-mid); line-height: 1.85; margin-bottom: 20px; }
+    .about-stats { display: flex; gap: 40px; margin-top: 40px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--green-dark); display: block; }
+    .stat-label { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-mid); }
+
+    #testimonials { background: var(--green-dark); padding: 100px 48px; }
+    .testimonials-intro { text-align: center; margin-bottom: 60px; }
+    .testimonials-intro .section-label { color: var(--pink-light); }
+    .testimonials-intro .section-title { color: var(--cream); }
+    .testimonials-intro .divider { margin: 20px auto 0; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; max-width: 1100px; margin: 0 auto; }
+    .testimonial-card { background: var(--green-mid); padding: 40px 36px; border-top: 3px solid var(--pink); position: relative; }
+    .testimonial-quote { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--pink); line-height: 1; margin-bottom: 16px; opacity: 0.6; }
+    .testimonial-text { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; font-style: italic; color: var(--cream-dark); line-height: 1.8; margin-bottom: 24px; }
+    .testimonial-author { display: flex; align-items: center; gap: 14px; }
+    .author-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--cream); }
+    .author-name { font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--cream); letter-spacing: 0.05em; }
+    .author-stars { color: var(--pink); font-size: 0.75rem; letter-spacing: 2px; }
+
+    #contact { background: var(--cream); }
+    .contact-wrapper { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
+    .contact-detail { display: flex; gap: 16px; margin-bottom: 28px; align-items: flex-start; }
+    .contact-icon { width: 40px; height: 40px; background: var(--green-dark); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+    .contact-detail-text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--text-mid); line-height: 1.6; }
+    .contact-detail-text strong { display: block; font-family: 'Lato', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-dark); margin-bottom: 4px; font-weight: 400; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-family: 'Lato', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green-dark); }
+    .form-group input, .form-group select, .form-group textarea { background: var(--white); border: 1px solid var(--cream-dark); border-bottom: 2px solid var(--green-mid); padding: 12px 16px; font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--text-dark); outline: none; transition: border-color 0.3s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-bottom-color: var(--pink); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit { background: var(--green-dark); color: var(--cream); border: none; padding: 16px 48px; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.3s, transform 0.2s; display: inline-block; margin-top: 8px; }
+    .form-submit:hover { background: var(--green-mid); transform: translateY(-2px); }
+
+    footer { background: var(--green-dark); border-top: 2px solid var(--pink); padding: 48px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--cream); }
+    .footer-logo span { color: var(--pink); font-style: italic; }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-dark); text-decoration: none; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--pink); }
+    .footer-copy { font-family: 'Lato', sans-serif; font-size: 0.72rem; color: var(--green-light); letter-spacing: 0.05em; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { gap: 20px; }
+      section { padding: 80px 24px; }
+      #about { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+      .about-accent-box { display: none; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 48px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item:first-child { grid-column: span 2; }
+      footer { flex-direction: column; gap: 24px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-title { font-size: 2.8rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: span 1; }
+      .about-stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Sweet Tooth <span>Cakery</span></div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+    <div class="hero-content">
+      <span class="hero-tag">Handcrafted with love · Est. 2024</span>
+      <h1 class="hero-title">
+        Baked from<br><em>the heart,</em><br>to your table.
+      </h1>
+      <p class="hero-sub">
+        Artisan cakes, cupcakes &amp; pastries made with seasonal ingredients and a whole lot of warmth.
+      </p>
+      <div class="hero-btns">
+        <a href="#menu" class="btn-primary">View Our Menu</a>
+        <a href="#contact" class="btn-outline">Place an Order</a>
+      </div>
+    </div>
+    <div class="hero-scroll">scroll</div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="menu-intro fade-in">
+      <span class="section-label">Our Offerings</span>
+      <h2 class="section-title">Made fresh,<br><em>every single day.</em></h2>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text-mid);max-width:520px;margin:0 auto;line-height:1.8;">Each item is crafted in small batches using locally sourced ingredients — because good baking deserves real care.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card fade-in">
+        <div class="menu-card-accent"></div>
+        <span class="menu-card-tag">Signature</span>
+        <h3>Layer Cakes</h3>
+        <p>Towering, moist, and draped in velvety buttercream. Custom flavours available for all occasions — birthdays, weddings, and beyond.</p>
+        <span class="menu-price">From $65</span>
+      </div>
+      <div class="menu-card fade-in">
+        <div class="menu-card-accent"></div>
+        <span class="menu-card-tag">Seasonal</span>
+        <h3>Cupcakes</h3>
+        <p>Fluffy, golden-topped cupcakes in rotating seasonal flavours. Perfect as gifts, party favours, or a little everyday treat.</p>
+        <span class="menu-price">From $4 each / $22 for 6</span>
+      </div>
+      <div class="menu-card fade-in">
+        <div class="menu-card-accent"></div>
+        <span class="menu-card-tag">Daily Bake</span>
+        <h3>Pastries</h3>
+        <p>Buttery croissants, flaky danishes, and rustic tarts — baked fresh each morning and sold until they're gone.</p>
+        <span class="menu-price">From $3.50</span>
+      </div>
+      <div class="menu-card fade-in">
+        <div class="menu-card-accent"></div>
+        <span class="menu-card-tag">Bespoke</span>
+        <h3>Custom Orders</h3>
+        <p>Got a vision? We'll bring it to life. Custom sculpted cakes, painted designs, and personalised flavour profiles on request.</p>
+        <span class="menu-price">Enquire for pricing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="gallery-intro fade-in">
+      <span class="section-label">Our Work</span>
+      <h2 class="section-title" style="color:var(--cream);">A little <em style="color:var(--pink-light);">eye candy.</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item fade-in">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-icon">🎂</span>
+            <span>Wedding Tier Cake</span>
+          </div>
+        </div>
+        <div class="gallery-overlay"><span>View Photo</span></div>
+      </div>
+      <div class="gallery-item fade-in">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-icon">🧁</span>
+            <span>Rose Cupcakes</span>
+          </div>
+        </div>
+        <div class="gallery-overlay"><span>View Photo</span></div>
+      </div>
+      <div class="gallery-item fade-in">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-icon">🥐</span>
+            <span>Morning Pastries</span>
+          </div>
+        </div>
+        <div class="gallery-overlay"><span>View Photo</span></div>
+      </div>
+      <div class="gallery-item fade-in">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-icon">🎂</span>
+            <span>Custom Birthday Cake</span>
+          </div>
+        </div>
+        <div class="gallery-overlay"><span>View Photo</span></div>
+      </div>
+      <div class="gallery-item fade-in">
+        <div class="gallery-item-inner">
+          <div class="gallery-placeholder">
+            <span class="gallery-placeholder-icon">🌸</span>
+            <span>Floral Layer Cake</span>
+          </div>
+        </div>
+        <div class="gallery-overlay"><span>View Photo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-visual fade-in">
+      <div class="about-image-box">
+        <div class="about-image-box-inner">🎂</div>
+      </div>
+      <div class="about-accent-box"></div>
+    </div>
+    <div class="about-text fade-in">
+      <span class="section-label">Our Story</span>
+      <h2 class="section-title">Baking has always<br>been our <em>love language.</em></h2>
+      <div class="divider"></div>
+      <p>What started as weekend baking for family and friends quietly turned into something bigger. We believe every cake tells a story — and we pour our whole heart into making sure yours is one worth telling.</p>
+      <p>Everything is made by hand, in small batches, using quality ingredients we actually believe in. No shortcuts, no compromises. Just honest, delicious baking.</p>
+      <div class="about-stats">
+        <div class="stat-item">
+          <span class="stat-num">500+</span>
+          <span class="stat-label">Cakes Made</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Made by Hand</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">5★</span>
+          <span class="stat-label">Reviews</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="testimonials-intro fade-in">
+      <span class="section-label">Kind Words</span>
+      <h2 class="section-title" style="color:var(--cream);">What our <em style="color:var(--pink-light);">customers</em> say.</h2>
+      <div class="divider" style="margin:20px auto 0;"></div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Ordered a custom birthday cake and I was completely blown away. The detail, the flavour, the presentation — everything was absolutely perfect.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div class="author-info">
+            <div class="author-name">Sarah M.</div>
+            <div class="author-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The cupcakes were a huge hit at our office party. Moist, gorgeous-looking, and gone within minutes. Everyone was asking where we got them!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">J</div>
+          <div class="author-info">
+            <div class="author-name">James L.</div>
+            <div class="author-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Genuinely the best pastries I've had outside of a Parisian bakery. The croissants are flaky, buttery perfection. I'm a regular now!</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div class="author-info">
+            <div class="author-name">Amara T.</div>
+            <div class="author-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-wrapper">
+      <div class="contact-info fade-in">
+        <span class="section-label">Get in Touch</span>
+        <h2 class="section-title">Let's make<br>something <em>sweet.</em></h2>
+        <div class="divider"></div>
+        <div class="contact-detail">
+          <div class="contact-icon">📍</div>
+          <div class="contact-detail-text">
+            <strong>Location</strong>
+            123 Bakery Lane<br>Your City, State 00000
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-detail-text">
+            <strong>Hours</strong>
+            Tues – Sat: 8am – 6pm<br>Sun: 9am – 2pm
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-detail-text">
+            <strong>Email</strong>
+            hello@sweettothcakery.com
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">📱</div>
+          <div class="contact-detail-text">
+            <strong>Phone</strong>
+            (555) 012-3456
+          </div>
+        </div>
+      </div>
+      <div class="contact-form fade-in">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane"/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Doe"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="jane@example.com"/>
+        </div>
+        <div class="form-group">
+          <label>I'm interested in…</label>
+          <select>
+            <option>Custom Cake Order</option>
+            <option>Cupcake Box</option>
+            <option>Pastry Catering</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell us about your order, event date, flavour ideas…"></textarea>
+        </div>
+        <button class="form-submit">Send Enquiry</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Sweet Tooth <span>Cakery</span></div>
+    <ul class="footer-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2024 Sweet Tooth Cakery · All rights reserved</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
